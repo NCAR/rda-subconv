@@ -15,8 +15,9 @@ using strutils::ftos;
 using strutils::itos;
 using strutils::lltos;
 using strutils::replace_all;
-using strutils::substitute;
 using strutils::split;
+using strutils::sql_ready;
+using strutils::substitute;
 
 namespace subconv {
 
@@ -320,8 +321,8 @@ void update_rdadb(long long size_input, size_t fcount, string dsrqst_note,
   }
   if (rdadb_server.update("dssdb.dsrqst", "size_input = " + lltos(size_input) +
       ", fcount = " + itos(fcount) + ", rqsttype = '" + rqsttype + "', note = '"
-      + substitute(dsrqst_note, "'", "\\'") + "', subflag = " + itos(subflag),
-      "rindex = " + args.rqst_index) < 0) {
+      + sql_ready(dsrqst_note) + "', subflag = " + itos(subflag), "rindex = " +
+      args.rqst_index) < 0) {
     throw runtime_error("update_rdadb(): update error: " + rdadb_server.
         error());
   }
