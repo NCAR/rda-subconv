@@ -8,6 +8,7 @@
 #include "../include/subconv.hpp"
 #include <iostream>
 #include <thread>
+#include <PostgreSQL.hpp>
 #include <utils.hpp>
 #include <metadata.hpp>
 #include <myexception.hpp>
