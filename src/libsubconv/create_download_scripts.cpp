@@ -10,7 +10,6 @@ namespace subconv {
 
 void create_download_scripts(const vector<string>& wget_list, string
     dsrqst_root) {
-  putenv(const_cast<char *>(http_cookie.c_str()));
   putenv(const_cast<char *>("SERVER_NAME=rda.ucar.edu"));
   auto web_download_directory = args.download_directory;
   replace_all(web_download_directory, dsrqst_root, "");
