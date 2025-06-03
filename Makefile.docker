@@ -1,0 +1,75 @@
+#
+# Compiler options
+#
+COMPILE_OPTIONS = -Wall -Wold-style-cast -O3 -std=c++14 -Weffc++
+#
+# Local include directory
+#
+INCLUDEDIR = ./include
+#
+# Local source directory
+#
+SOURCEDIR = ./src
+#
+# Set the build directory
+#
+BUILDDIR = ./build
+#
+HOST = $(shell hostname)
+#
+TIMESTAMP = $(shell date +%Y%m%d%H%M%S)
+#
+COMPILER = g++
+DB_INCLUDEDIR = /usr/include/postgresql
+LIBDIR = /usr/local/lib
+DB_LIBDIR = /usr/lib/x86_64-linux-gnu
+DBLIBS = -lpq -lpostgresql
+JASPER_INCLUDEDIR = /usr/lib/x86_64-linux-gnu/include/jasper
+JASPER_LIBDIR = /usr/lib/x86_64-linux-gnu/lib
+ZLIBDIR = /usr/lib/x86_64-linux-gnu
+BINDIR = /usr/local/bin
+RUN_PATH = -Wl,-rpath,$(LIBDIR)
+#
+# If not a "make-able" host, exit with an error message
+#
+# Run-path settings
+#
+DB_RUN_PATH = -Wl,-rpath,$(DB_LIBDIR)
+JASPER_RUN_PATH = -Wl,-rpath,$(JASPER_LIBDIR)
+Z_RUN_PATH = -Wl,-rpath,$(ZLIBDIR)
+#
+# Get the list of library object files by checking the library source directory
+#
+SUBCONV_OBJS = $(subst $(SOURCEDIR),$(BUILDDIR),$(patsubst %.cpp,%.o,$(wildcard $(SOURCEDIR)/libsubconv/*.cpp)))
+#
+.PHONY: builddir clean install
+#
+all: subconv
+#
+# libsubconv.so
+#
+$(BUILDDIR)/libsubconv/%.o: $(SOURCEDIR)/libsubconv/%.cpp $(INCLUDEDIR)/subconv.hpp
+	$(COMPILER) $(COMPILE_OPTIONS) -c -fPIC -D__WITH_JASPER $< -I$(INCLUDEDIR) -I$(DB_INCLUDEDIR) -I$(JASPER_INCLUDEDIR) -o $@
+#
+libsubconv.so: CHECKDIR=$(LIBDIR)
+libsubconv.so: CHECK_TARGET=libsubconv.so
+libsubconv.so: builddir $(SUBCONV_OBJS) $(INCLUDEDIR)/subconv.hpp
+	$(COMPILER) -shared -o $(BUILDDIR)/$@ -Wl,-soname,$@. $(SUBCONV_OBJS)
+#
+# subconv executable
+#
+subconv: CHECKDIR=$(BINDIR)
+subconv: CHECK_TARGET=subconv
+subconv: $(SOURCEDIR)/subconv.cpp builddir libsubconv
+	$(eval LINK_LIBS = $(DBLIBS) -lsubconv -lio -lutils -ldatetime -lutilsthread -lmetautils -lmetahelpers -lbitmap -lgrids -lgridutils -lsearch -lxml -lweb -ls3 -lmyssl -lerror -lz -lcurl -ljasper)
+	$(COMPILER) $(COMPILE_OPTIONS) -Wl,-rpath,$(shell pwd)/$(BUILDDIR) $(RUN_PATH) $(DB_RUN_PATH) $(JASPER_RUN_PATH) $(Z_RUN_PATH) $(SOURCEDIR)/$@.cpp -I$(INCLUDEDIR) -I$(DB_INCLUDEDIR) -I$(JASPER_INCLUDEDIR) -L$(BUILDDIR) -L$(LIBDIR) -L$(DB_LIBDIR) -L$(JASPER_LIBDIR) -L$(ZLIBDIR) -D__WITH_JASPER $(LINK_LIBS) -o $(BUILDDIR)/$@
+#
+# Create the build directory
+#
+builddir:
+	mkdir -p $(BUILDDIR)/libsubconv
+#
+# Remove the build directory
+#
+clean:
+	rm -rf $(BUILDDIR)
