@@ -3,9 +3,9 @@
 #
 COMPILE_OPTIONS = -Wall -Wold-style-cast -O3 -std=c++14 -Weffc++
 #
-# Local include directory
+# Include directories
 #
-INCLUDEDIR = ./include
+INCLUDES = -I./include -I/tmp/cpp/include -I/usr/include/postgresql -I/usr/lib/x86_64-linux-gnu/include/jasper
 #
 # Local source directory
 #
@@ -20,11 +20,9 @@ HOST = $(shell hostname)
 TIMESTAMP = $(shell date +%Y%m%d%H%M%S)
 #
 COMPILER = g++
-DB_INCLUDEDIR = /usr/include/postgresql
 LIBDIR = /usr/local/lib
 DB_LIBDIR = /usr/lib/x86_64-linux-gnu
 DBLIBS = -lpq -lpostgresql
-JASPER_INCLUDEDIR = /usr/lib/x86_64-linux-gnu/include/jasper
 JASPER_LIBDIR = /usr/lib/x86_64-linux-gnu/lib
 ZLIBDIR = /usr/lib/x86_64-linux-gnu
 BINDIR = /usr/local/bin
@@ -48,12 +46,12 @@ all: subconv
 #
 # libsubconv.so
 #
-$(BUILDDIR)/libsubconv/%.o: $(SOURCEDIR)/libsubconv/%.cpp $(INCLUDEDIR)/subconv.hpp
-	$(COMPILER) $(COMPILE_OPTIONS) -c -fPIC -D__WITH_JASPER $< -I$(INCLUDEDIR) -I$(DB_INCLUDEDIR) -I$(JASPER_INCLUDEDIR) -o $@
+$(BUILDDIR)/libsubconv/%.o: $(SOURCEDIR)/libsubconv/%.cpp ./include/subconv.hpp
+	$(COMPILER) $(COMPILE_OPTIONS) -c -fPIC -D__WITH_JASPER $< $(INCLUDES) -o $@
 #
 libsubconv.so: CHECKDIR=$(LIBDIR)
 libsubconv.so: CHECK_TARGET=libsubconv.so
-libsubconv.so: builddir $(SUBCONV_OBJS) $(INCLUDEDIR)/subconv.hpp
+libsubconv.so: builddir $(SUBCONV_OBJS) ./include/subconv.hpp
 	$(COMPILER) -shared -o $(BUILDDIR)/$@ -Wl,-soname,$@. $(SUBCONV_OBJS)
 #
 # subconv executable
@@ -62,7 +60,7 @@ subconv: CHECKDIR=$(BINDIR)
 subconv: CHECK_TARGET=subconv
 subconv: $(SOURCEDIR)/subconv.cpp builddir libsubconv.so
 	$(eval LINK_LIBS = $(DBLIBS) -lsubconv -lio -lutils -ldatetime -lutilsthread -lmetautils -lmetahelpers -lbitmap -lgrids -lgridutils -lsearch -lxml -lweb -ls3 -lmyssl -lerror -lz -lcurl -ljasper)
-	$(COMPILER) $(COMPILE_OPTIONS) -Wl,-rpath,$(shell pwd)/$(BUILDDIR) $(RUN_PATH) $(DB_RUN_PATH) $(JASPER_RUN_PATH) $(Z_RUN_PATH) $(SOURCEDIR)/$@.cpp -I$(INCLUDEDIR) -I$(DB_INCLUDEDIR) -I$(JASPER_INCLUDEDIR) -L$(BUILDDIR) -L$(LIBDIR) -L$(DB_LIBDIR) -L$(JASPER_LIBDIR) -L$(ZLIBDIR) -D__WITH_JASPER $(LINK_LIBS) -o $(BUILDDIR)/$@
+	$(COMPILER) $(COMPILE_OPTIONS) -Wl,-rpath,$(shell pwd)/$(BUILDDIR) $(RUN_PATH) $(DB_RUN_PATH) $(JASPER_RUN_PATH) $(Z_RUN_PATH) $(SOURCEDIR)/$@.cpp $(INCLUDES) -L$(BUILDDIR) -L$(LIBDIR) -L$(DB_LIBDIR) -L$(JASPER_LIBDIR) -L$(ZLIBDIR) -D__WITH_JASPER $(LINK_LIBS) -o $(BUILDDIR)/$@
 #
 # Create the build directory
 #
