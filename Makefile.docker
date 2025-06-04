@@ -52,7 +52,7 @@ $(BUILDDIR)/libsubconv/%.o: $(SOURCEDIR)/libsubconv/%.cpp ./include/subconv.hpp
 libsubconv.so: CHECKDIR=$(LIBDIR)
 libsubconv.so: CHECK_TARGET=libsubconv.so
 libsubconv.so: builddir $(SUBCONV_OBJS) ./include/subconv.hpp
-	$(COMPILER) -shared -o $(BUILDDIR)/$@ -Wl,-soname,$@. $(SUBCONV_OBJS)
+	$(COMPILER) -shared -o $(BUILDDIR)/$@ -Wl,-soname,$@ $(SUBCONV_OBJS)
 #
 # subconv executable
 #
