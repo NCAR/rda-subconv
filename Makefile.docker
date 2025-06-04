@@ -60,7 +60,7 @@ subconv: CHECKDIR=$(BINDIR)
 subconv: CHECK_TARGET=subconv
 subconv: $(SOURCEDIR)/subconv.cpp builddir libsubconv.so
 	$(eval LINK_LIBS = $(DBLIBS) -lsubconv -lio -lutils -ldatetime -lutilsthread -lmetautils -lmetahelpers -lbitmap -lgrids -lgridutils -lsearch -lxml -lweb -ls3 -lmyssl -lerror -lz -lcurl -ljasper)
-	$(COMPILER) $(COMPILE_OPTIONS) -Wl,-rpath,$(shell pwd)/$(BUILDDIR) $(RUN_PATH) $(DB_RUN_PATH) $(JASPER_RUN_PATH) $(Z_RUN_PATH) $(SOURCEDIR)/$@.cpp $(INCLUDES) -L$(BUILDDIR) -L$(LIBDIR) -L$(DB_LIBDIR) -L$(JASPER_LIBDIR) -L$(ZLIBDIR) -D__WITH_JASPER $(LINK_LIBS) -o $(BUILDDIR)/$@
+	$(COMPILER) $(COMPILE_OPTIONS) $(RUN_PATH) $(DB_RUN_PATH) $(JASPER_RUN_PATH) $(Z_RUN_PATH) $(SOURCEDIR)/$@.cpp $(INCLUDES) -L$(BUILDDIR) -L$(LIBDIR) -L$(DB_LIBDIR) -L$(JASPER_LIBDIR) -L$(ZLIBDIR) -D__WITH_JASPER $(LINK_LIBS) -o $(BUILDDIR)/$@
 #
 # Create the build directory
 #
