@@ -14,7 +14,8 @@
 namespace subconv {
 
 struct Directives {
-  Directives() : dsrqst_root(), dataset_block(), pbs_options(), obj_store() { }
+  Directives() : dsrqst_root(), dataset_block(), pbs_options(), obj_store(),
+      data_root(), db_config() { }
 
   std::string dsrqst_root, dataset_block, pbs_options;
   struct ObjectStore {
@@ -25,6 +26,8 @@ struct Directives {
 
     std::string host, access_key, secret_key, region, terminal;
   } obj_store;
+  std::string data_root;
+  PostgreSQL::DBconfig db_config;
 };
 
 struct Args {
