@@ -29,9 +29,19 @@ Directives read_config() {
         }
       } else if (lparts.front() == args.rqst_index) {
         directives.pbs_options = lparts.back();
-      } else if (lparts.front() == "obj_store") {
+      } else if (lparts.front() == "objectStore") {
         directives.obj_store.fill(lparts[1], lparts[2], lparts[3], lparts[4],
             lparts[5]);
+      } else if (lparts.front() == "dataRoot") {
+        directives.data_root = lparts.back();
+      } else if (lparts.front() == "PostgreSQLServer") {
+        directives.db_config.host = lparts.back();
+      } else if (lparts.front() == "PostgreSQLUsername") {
+        directives.db_config.user = lparts.back();
+      } else if (lparts.front() == "PostgreSQLPassword") {
+        directives.db_config.password = lparts.back();
+      } else if (lparts.front() == "PostgreSQLDatabase") {
+        directives.db_config.dbname = lparts.back();
       }
       ifs.getline(line, 256);
     }
