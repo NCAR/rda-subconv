@@ -31,10 +31,10 @@ struct Directives {
 };
 
 struct Args {
-  Args() : SHARE_DIRECTORY("/glade/u/home/rdadata/share"), num_threads(0),
-      rinfo(), rqst_index(), download_directory(), batch_type(0x0),
-      main_timer(), db_timer(), is_test(false), ignore_volume(false),
-      ignore_restrictions(false), get_timings(false) { }
+  Args() : SHARE_DIRECTORY("/gpfs/csfs1/collections/rda/work/rdadata/share"),
+      num_threads(0), rinfo(), rqst_index(), download_directory(),
+      batch_type(0x0), main_timer(), db_timer(), is_test(false),
+      ignore_volume(false), ignore_restrictions(false), get_timings(false) { }
 
   const std::string SHARE_DIRECTORY;
   size_t num_threads;
