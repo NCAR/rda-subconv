@@ -253,7 +253,7 @@ extern size_t combine_csv_files(std::vector<std::string>& wget_list, const
 extern std::string create_user_email_notice(xmlutils::ParameterMapper&
     parameter_mapper, xmlutils::LevelMapper& level_mapper,
     std::unordered_map<std::string, std::string>& unique_formats_map);
-extern std::string batch_options();
+extern std::string batch_options(const Directives& directives);
 extern std::string parameter_code(PostgreSQL::Server& server, std::string
     parameter);
 

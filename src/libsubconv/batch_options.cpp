@@ -10,7 +10,7 @@ using std::stringstream;
 
 namespace subconv {
 
-string batch_options() {
+string batch_options(const Directives& directives) {
   auto cpus_per_task = 0;
   string mem;
   if (request_values.ofmt.empty()) {

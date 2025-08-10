@@ -178,7 +178,7 @@ int main(int argc, char **argv) {
     //   sbatch options from that, and exit
     if (subconv::args.batch_type != 0x0 && input_files.size() > 1000) {
       subconv::timing_data.num_reads = 0x40000000 | input_files.size();
-      cout << subconv::batch_options() << endl;
+      cout << subconv::batch_options(subconv_directives) << endl;
       return 0;
     }
 
@@ -282,7 +282,7 @@ int main(int argc, char **argv) {
 
     // if this was an sbatch options run, we are done
     if (subconv::args.batch_type != 0x0) {
-      cout << subconv::batch_options() << endl;
+      cout << subconv::batch_options(subconv_directives) << endl;
       return 0;
     }
 
