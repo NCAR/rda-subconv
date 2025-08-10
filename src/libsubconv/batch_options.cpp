@@ -6,6 +6,7 @@
 using std::setfill;
 using std::setw;
 using std::string;
+using std::stringstream;
 
 namespace subconv {
 
@@ -72,7 +73,7 @@ string batch_options() {
     ++hr;
     min = 0;
   }
-  std::stringstream batch_options;
+  stringstream batch_options;
   switch (args.batch_type) {
     case 'B': {
       batch_options << "--cpus-per-task=" << cpus_per_task * 2 << " --mem=" <<
@@ -80,8 +81,21 @@ string batch_options() {
       break;
     }
     case 'Q': {
-      batch_options << "-l select=1:ncpus=" << cpus_per_task << ":mem=" <<
-          mem << ",walltime=" << setw(2) << setfill('0') << hr << ":" <<
+      stringstream select;
+      select << "1:ncpus=" << cpus_per_task << ":mem=" << mem;
+      batch_options << "-l select=";
+      if (directives.host_restrict.empty()) {
+        batch_options << select.str();
+      } else {
+        for (size_t n = 0; n < directives.host_restrict.size(); ++n) {
+          if (n > 0) {
+            batch_options << "+";
+          }
+          batch_options << select.str() << ":host=" <<
+              directives.host_restrict[n];
+        }
+      }
+      batch_options << ",walltime=" << setw(2) << setfill('0') << hr << ":" <<
           setw(2) << min << ":00";
       break;
     }

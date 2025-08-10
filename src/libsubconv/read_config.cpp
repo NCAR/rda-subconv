@@ -29,6 +29,8 @@ Directives read_config() {
         }
       } else if (lparts.front() == args.rqst_index) {
         directives.pbs_options = lparts.back();
+      } else if (lparts.front() == "restrictToHost") {
+        directives.host_restrict.emplace_back(lparts.back());
       } else if (lparts.front() == "objectStore") {
         directives.obj_store.fill(lparts[1], lparts[2], lparts[3], lparts[4],
             lparts[5]);

@@ -14,10 +14,11 @@
 namespace subconv {
 
 struct Directives {
-  Directives() : dsrqst_root(), dataset_block(), pbs_options(), obj_store(),
-      data_root(), db_config() { }
+  Directives() : dsrqst_root(), dataset_block(), pbs_options(), host_restrict(),
+      obj_store(), data_root(), db_config() { }
 
   std::string dsrqst_root, dataset_block, pbs_options;
+  std::vector<std::string> host_restrict;
   struct ObjectStore {
     ObjectStore() : host(), access_key(), secret_key(), region(), terminal() { }
     void fill(std::string h, std::string ak, std::string sk, std::string r,
