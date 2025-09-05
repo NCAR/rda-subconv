@@ -33,7 +33,7 @@ struct Directives {
 
 struct Args {
   Args() : SHARE_DIRECTORY(
-      "/glade/campaign/collections/rda/work/rdadata/share"), num_threads(0),
+      "/glade/campaign/collections/gdex/work/rdadata/share"), num_threads(0),
       rinfo(), rqst_index(), download_directory(), batch_type(0x0),
       main_timer(), db_timer(), is_test(false), ignore_volume(false),
       ignore_restrictions(false), get_timings(false) { }
