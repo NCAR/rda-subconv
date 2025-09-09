@@ -248,8 +248,8 @@ string create_user_email_notice(xmlutils::ParameterMapper& parameter_mapper,
   }
   email_notice_fs << dsrqst_note << endl;
   if (request_values.ancillary.location.empty()) {
-    email_notice_fs << "You will need to be signed in to the RDA web server at "
-        "https://rda.ucar.edu/.  Then you will find your data at: "
+    email_notice_fs << "You will need to be signed in to the GDEX web server "
+        "at https://gdex.ucar.edu/.  Then you will find your data at: "
         "<DSSURL><WHOME>/<RQSTID>/" << endl;
     email_notice_fs << endl;
     email_notice_fs << "Your data will remain on our system for <DAYS> days. If "
@@ -266,9 +266,8 @@ string create_user_email_notice(xmlutils::ParameterMapper& parameter_mapper,
   email_notice_fs << endl;
   email_notice_fs << "Sincerely," << endl;
   email_notice_fs << "<SPECIALIST>" << endl;
-  email_notice_fs << "NCAR/CISL RDA" << endl;
-  email_notice_fs << "<PHONENO>" << endl;
-  email_notice_fs << "<SENDER>" << endl;
+  email_notice_fs << "NSF NCAR GDEX" << endl;
+  email_notice_fs << "<DSSURL>" << endl;
   email_notice_fs.close();
   return dsrqst_note;
 }
