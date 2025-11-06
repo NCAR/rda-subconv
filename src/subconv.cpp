@@ -52,16 +52,12 @@ int main(int argc, char **argv) {
     atexit(subconv::clean_up);
 
     // connect to the database servers
-    subconv::metadata_server.connect(metautils::directives.database_server,
-        metautils::directives.metadb_username, metautils::directives.
-        metadb_password, "rdadb");
+    subconv::metadata_server.connect(metautils::directives.metadb_config);
     if (!subconv::metadata_server) {
       throw my::OpenFailed_Error("unable to connect to the metadata server at "
           "startup: '" + subconv::metadata_server.error() + "'");
     }
-    subconv::rdadb_server.connect(metautils::directives.database_server,
-        metautils::directives.rdadb_username, metautils::directives.
-        rdadb_password, "rdadb");
+    subconv::rdadb_server.connect(metautils::directives.rdadb_config);
     if (!subconv::rdadb_server) {
       throw my::OpenFailed_Error("unable to connect to the RDADB server at "
           "startup: '" + subconv::rdadb_server.error() + "'");
@@ -265,16 +261,12 @@ int main(int argc, char **argv) {
     }
 
     // re-connect to the database servers
-    subconv::metadata_server.connect(metautils::directives.database_server,
-        metautils::directives.metadb_username, metautils::directives.
-        metadb_password, "rdadb");
+    subconv::metadata_server.connect(metautils::directives.metadb_config);
     if (!subconv::metadata_server) {
       throw my::OpenFailed_Error("unable to connect to the metadata server "
           "after files built: '" + subconv::metadata_server.error() + "'");
     }
-    subconv::rdadb_server.connect(metautils::directives.database_server,
-        metautils::directives.rdadb_username, metautils::directives.
-        rdadb_password, "rdadb");
+    subconv::rdadb_server.connect(metautils::directives.rdadb_config);
     if (!subconv::rdadb_server) {
       throw my::OpenFailed_Error("unable to connect to the RDADB server after "
           "files built: '" + subconv::rdadb_server.error() + "'");
