@@ -246,7 +246,7 @@ void write_netcdf_subset_header(string request_index, string input_file,
   }
   auto attrs = inc.global_attributes();
   for (size_t n = 0; n < attrs.size(); ++n) {
-    onc.add_global_attribute(attrs[n].name, attrs[n].data_type,
+    onc.add_global_attribute(attrs[n].name, attrs[n].nc_type,
         attrs[n].num_values, attrs[n].values);
   }
   onc.add_global_attribute("Creation date and time",
@@ -282,7 +282,7 @@ void write_netcdf_subset_header(string request_index, string input_file,
             "latitude") {
           inc.variable_data(vars[n].name, lat_data);
           auto dim_len = 0;
-          sub_lat_data.resize(lat_data.size(), vars[n].data_type);
+          sub_lat_data.resize(lat_data.size(), vars[n].nc_type);
           for (size_t l = 0; l < lat_data.size(); ++l) {
             auto lat_val = lat_data[l];
             if (lat_val >= request_values.slat && lat_val <=
@@ -304,7 +304,7 @@ void write_netcdf_subset_header(string request_index, string input_file,
             "longitude") {
           inc.variable_data(vars[n].name, lon_data);
           auto dim_len = 0;
-          sub_lon_data.resize(lon_data.size(), vars[n].data_type);
+          sub_lon_data.resize(lon_data.size(), vars[n].nc_type);
           size_t last_lon = 0;
           for (size_t l = 0; l < lon_data.size(); ++l) {
             auto lon_val = lon_data[l];
@@ -383,11 +383,11 @@ void write_netcdf_subset_header(string request_index, string input_file,
       } else {
         var_name = new_coords_map[vars[n].name];
       }
-      onc.add_variable(var_name, vars[n].data_type, vars[n].dimids.size(),
+      onc.add_variable(var_name, vars[n].nc_type, vars[n].dimids.size(),
           dimension_ids.get());
       for (size_t m = 0; m < vars[n].attrs.size(); ++m) {
         onc.add_variable_attribute(var_name, vars[n].attrs[m].name,
-            vars[n].attrs[m].data_type, vars[n].attrs[m].num_values,
+            vars[n].attrs[m].nc_type, vars[n].attrs[m].num_values,
             vars[n].attrs[m].values);
         if (to_lower(vars[n].name) == "time" && vars[n].attrs[m].name ==
             "units") {
@@ -402,7 +402,7 @@ void write_netcdf_subset_header(string request_index, string input_file,
             replace_all(s, "-", "");
             replace_all(s, ":", "");
             nc_time.base.set(stoll(s));
-            nc_time.data_type = vars[n].data_type;
+            nc_time.nc_type = vars[n].nc_type;
           }
           if (nc_time.units.empty()) {
             throw runtime_error("Error: unable to locate time units");
@@ -798,7 +798,7 @@ void build_subset(ThreadData& thread_data, GridData& grid_data, const
           }
           VariableData time_data;
           if (time_data.size() == 0) {
-            time_data.resize(1, nc_time.data_type);
+            time_data.resize(1, nc_time.nc_type);
           }
           time_data.set(0, tval);
           outs.onc.add_record_data(time_data);
