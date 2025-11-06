@@ -931,8 +931,7 @@ void build_file(ThreadData& thread_data, bool& is_temporal_subset) {
   if (args.is_test || !file_exists(thread_data, nts_table, outs, is_multi)) {
 
     // connect to the database and submit the main byte query
-    Server srv(metautils::directives.database_server, metautils::directives.
-        metadb_username, metautils::directives.metadb_password, "rdadb", 300);
+    Server srv(metautils::directives.metadb_config, 300);
     if (!srv) {
       throw runtime_error("Error: build_file() unable to connect to metadata "
           "server: '" + srv.error() + "'");
@@ -992,8 +991,7 @@ void build_file(ThreadData& thread_data, bool& is_temporal_subset) {
   if (!thread_data.insert_filenames.empty()) {
 
     // update wfrqst with any file names reported by the thread
-    Server srv(metautils::directives.database_server, metautils::directives.
-        rdadb_username, metautils::directives.rdadb_password, "rdadb", 300);
+    Server srv(metautils::directives.rdadb_config, 300);
     if (!srv) {
       throw runtime_error("build_file(): unable to connect to RDADB server: '" +
           srv.error() + "'");
