@@ -15,8 +15,8 @@
 
 using namespace PostgreSQL;
 using grid_to_netcdf::GridData;
-using NcTime = NetCDF::Time;
-using DataType = NetCDF::DataType;
+using NCTime = NetCDF::Time;
+using NCType = NetCDF::NCType;
 using VariableData = NetCDF::VariableData;
 using std::endl;
 using std::ofstream;
@@ -238,7 +238,7 @@ void build_queries(Server& server, const ThreadData& thread_data, LocalQuery&
 }
 
 void write_netcdf_subset_header(string request_index, string input_file,
-    OutputNetCDFStream& onc, NcTime& nc_time, SpatialBitmap& spatial_bitmap,
+    OutputNetCDFStream& onc, NCTime& nc_time, SpatialBitmap& spatial_bitmap,
     int& num_values_in_subset) {
   InputNetCDFStream inc;
   if (!inc.open(input_file)) {
@@ -430,7 +430,7 @@ void write_netcdf_subset_header(string request_index, string input_file,
 }
 
 bool linked_to_full_file(const ThreadData& thread_data, OutputStream& outs,
-    NcTime& nc_time, SpatialBitmap& spatial_bitmap, int& num_values_in_subset,
+    NCTime& nc_time, SpatialBitmap& spatial_bitmap, int& num_values_in_subset,
     Server& srv, LocalQuery& query_count_files, size_t byte_query_num_rows) {
   bool linked_to_full_file = false;
   num_values_in_subset = 0;
@@ -592,7 +592,7 @@ void build_csv_subset(InputDataSource& input_data, long long offset_to_chunk,
 }
 
 void build_subset(ThreadData& thread_data, GridData& grid_data, const
-    NcTime& nc_time, SpatialBitmap& spatial_bitmap, int num_values_in_subset,
+    NCTime& nc_time, SpatialBitmap& spatial_bitmap, int num_values_in_subset,
     LocalQuery& byte_query, unique_ptr<unordered_set<string>>& nts_table,
     OutputStream& outs, bool is_multi) {
   if (args.is_test) {
@@ -811,13 +811,13 @@ void build_subset(ThreadData& thread_data, GridData& grid_data, const
             VariableData var_data;
             if (var_data.size() == 0) {
               var_data.resize(num_values_in_subset,
-                  static_cast<DataType>(stoi(row[3])));
+                  static_cast<NCType>(stoi(row[3])));
             }
             auto m = 0;
             for (int n = 0; n < spatial_bitmap.length(); ++n) {
               if (spatial_bitmap[n] == 1) {
-                switch (static_cast<DataType>(stoi(row[3]))) {
-                  case DataType::FLOAT: {
+                switch (static_cast<NCType>(stoi(row[3]))) {
+                  case NCType::FLOAT: {
                     union {
                       int i;
                       float f;
@@ -961,7 +961,7 @@ void build_file(ThreadData& thread_data, bool& is_temporal_subset) {
         is_temporal_subset = true;
       }
     }
-    NcTime nc_time;
+    NCTime nc_time;
     SpatialBitmap spatial_bitmap;
     int num_values_in_subset;
     if (!linked_to_full_file(thread_data, outs, nc_time, spatial_bitmap,
