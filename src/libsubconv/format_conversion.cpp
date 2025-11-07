@@ -41,6 +41,7 @@ void do_conversion(ThreadData& thread_data) {
       grid_data.subset_definition.longitude.west = request_values.wlon;
       grid_data.subset_definition.longitude.east = request_values.elon;
       grid_data.path_to_gauslat_lists = args.SHARE_DIRECTORY + "/GRIB";
+std::cerr << grid_data.path_to_gauslat_lists << std::endl;
       HouseKeeping hk;
       hk.include_parameter_set = thread_data.include_parameter_codes_set;
       write_netcdf_header_from_grib_file(istream, onc, grid_data, hk,
